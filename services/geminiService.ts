@@ -2,8 +2,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Product, BlogPost } from "../types";
 
-// Always use process.env.API_KEY directly as per guidelines.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lógica de fallback para a API KEY: 
+// 1. Procura em process.env (Studio/Build)
+// 2. Procura em window.ENV_API_KEY (Produção estática)
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || (window as any).ENV_API_KEY || "";
+  } catch (e) {
+    return (window as any).ENV_API_KEY || "";
+  }
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 export interface AISearchResult {
   ids: string[];
@@ -49,7 +59,7 @@ Instruções Cruciais de Fidelidade:
     return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error("Erro na busca IA:", error);
-    return { ids: [], message: "" };
+    return { ids: [], message: "No momento não consegui processar sua dúvida técnica. Por favor, utilize o botão do WhatsApp para falar diretamente com a Cristiane." };
   }
 };
 
@@ -93,7 +103,6 @@ REGRAS:
     const text = response.text || "[]";
     const posts: BlogPost[] = JSON.parse(text);
 
-    // Extrair links de grounding se disponíveis para dar mais veracidade
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     if (chunks && Array.isArray(chunks)) {
       posts.forEach((post, index) => {
