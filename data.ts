@@ -6,55 +6,99 @@ export const BRANDS_DATA: Brand[] = [
     id: 'Pollibox', 
     name: 'Pollibox Ecoadesivos', 
     color: '#1B345B',
-    description: 'Explore nossa linha de filmes adesivos, desenvolvidos com tecnologia de ponta para proporcionar colagem superior e confiável em uma ampla gama de materiais. Entretelas: Temos diversos tecidos com filme adesivo termorreativo aplicado, tanto para reforço com costura quanto sem costura, utilizados na estruturação e formação de cambrê. Filmes TPU.'
+    description: 'Líder em adesivos termocolantes e filmes TPU. Tecnologia limpa para colagens de alta performance sem solventes.'
   },
   { 
     id: 'Espugum', 
     name: 'Espugum - Ortholite Brasil', 
     color: '#2563eb',
-    description: 'Fabricante oficial da tecnologia Ortholite no Brasil. Produção de palmilhas de alta performance com células abertas, respirabilidade máxima e conforto duradouro.'
+    description: 'Fabricante oficial da tecnologia Ortholite. Palmilhas com 95% de respirabilidade e controle de umidade.'
   },
   { 
     id: 'Raima', 
     name: 'Raima Têxtil', 
     color: '#059669',
-    description: 'Especialista em tecidos para forração e cabedal. Oferece dublagens técnicas de alta resistência e desenvolvimento exclusivo de cores Pantone para grandes marcas.'
+    description: 'Especialista em tecidos técnicos, forros e dublagens com precisão de cores Pantone.'
   },
   { 
     id: 'Cordex', 
     name: 'Cordex Têxtil', 
     color: '#dc2626',
-    description: 'Referência em cordões, atacadores e elásticos industriais. Produtos com alta estabilidade dimensional e resistência à tração para o setor calçadista.'
+    description: 'Cordões, atacadores e elásticos industriais de alta resistência e durabilidade.'
   },
   { 
     id: 'SJB', 
     name: 'Solados SJB', 
     color: '#d97706',
-    description: 'SOLADOS FEMININOS EM PU, MICRO, TR. Combinação de design fashion com tecnologias de injeção direta que garantem leveza e durabilidade.'
+    description: 'SOLADOS FEMININOS EM PU, MICRO, TR. Design e leveza para o mercado de moda.'
   },
   { 
     id: 'Totalmaq', 
     name: 'Totalmaq Máquinas', 
     color: '#4b5563',
-    description: 'Tecnologia avançada em máquinas para dublagem, costura e automação industrial. Suporte técnico especializado e alta produtividade para sua fábrica.'
+    description: 'Maquinário de ponta para automação e dublagem industrial.'
   },
   { 
     id: 'Dayuse', 
     name: 'Dayuse Embalagens', 
-    color: '#22c55e', // Verde conforme solicitado
-    description: 'Especialista em embalagens flexíveis: Zip Lock (liso e personalizado), envelopes plásticos para e-commerce e embalagens autoadesivas transparentes.'
+    color: '#22c55e',
+    description: 'Soluções em plásticos flexíveis: Zip Lock, envelopes de segurança e autoadesivos.'
   },
 ];
 
 export const PRODUCTS: Product[] = [
+  // DAYUSE
   {
-    id: 'd1',
-    name: 'Zip Lock Liso e Personalizado',
+    id: 'day-01',
+    name: 'Zip Lock Personalizado',
     brand: 'Dayuse',
-    description: 'Embalagens Zip Lock de alta qualidade, disponíveis em versões lisas ou personalizadas com sua marca.',
-    technicalSpecs: ['Polietileno de Alta Densidade', 'Fechamento Hermético'],
+    description: 'Sacos com fechamento hermético personalizados com a logomarca da sua fábrica.',
+    technicalSpecs: ['Polietileno de baixa densidade', 'Impressão em até 4 cores', 'Fechamento trilho'],
     category: 'Embalagem',
-    image: '',
-    tags: ['zip lock', 'personalizado']
+    image: 'https://images.unsplash.com/photo-1605600611284-195205e0ae85?q=80&w=800&auto=format&fit=crop',
+    tags: ['embalagem', 'zip lock', 'personalizado']
+  },
+  {
+    id: 'day-02',
+    name: 'Envelope E-commerce',
+    brand: 'Dayuse',
+    description: 'Envelopes de segurança com fita autoadesiva inviolável para envios postais.',
+    technicalSpecs: ['Plástico Coextrusado', 'Fita Hot-Melt Inviolável', 'Interior em Blackout'],
+    category: 'Embalagem',
+    image: 'https://images.unsplash.com/photo-1589793463357-5fb813435467?q=80&w=800&auto=format&fit=crop',
+    tags: ['e-commerce', 'envios', 'segurança']
+  },
+  // POLLIBOX
+  {
+    id: 'pol-01',
+    name: 'Filme Adesivo Termo-Reativo',
+    brand: 'Pollibox',
+    description: 'Filme para colagem de cabedais e reforços sem a necessidade de adesivos líquidos.',
+    technicalSpecs: ['Ativação térmica 70°C-90°C', 'Eco-friendly', 'Alta resistência mecânica'],
+    category: 'Adesivos',
+    image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=800&auto=format&fit=crop',
+    tags: ['colagem', 'tecnologia', 'sustentável']
+  },
+  // SJB
+  {
+    id: 'sjb-01',
+    name: 'Solado Feminino Casual PU',
+    brand: 'SJB',
+    description: 'SOLADOS FEMININOS EM PU, MICRO, TR. Leveza extrema e acabamento premium.',
+    technicalSpecs: ['Material: PU de alta densidade', 'Textura antiderrapante', 'Design Fashion 2026'],
+    category: 'Solados',
+    image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800&auto=format&fit=crop',
+    tags: ['solados', 'feminino', 'conforto']
+  },
+  // ORTHOLITE
+  {
+    id: 'ortho-01',
+    name: 'Palmilha Ortholite Hybrid',
+    brand: 'Espugum',
+    description: 'Tecnologia mundial líder em conforto. Mantém 95% do amortecimento após o primeiro ano.',
+    technicalSpecs: ['Células abertas respiráveis', 'Lavável à máquina', 'Antimicrobiano'],
+    category: 'Componentes',
+    image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=800&auto=format&fit=crop',
+    tags: ['palmilha', 'ortholite', 'performance']
   }
 ];

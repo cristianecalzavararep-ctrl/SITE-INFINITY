@@ -2,18 +2,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Product, BlogPost } from "../types";
 
-// Lógica de fallback para a API KEY: 
-// 1. Procura em process.env (Studio/Build)
-// 2. Procura em window.ENV_API_KEY (Produção estática)
-const getApiKey = () => {
-  try {
-    return process.env.API_KEY || (window as any).ENV_API_KEY || "";
-  } catch (e) {
-    return (window as any).ENV_API_KEY || "";
-  }
-};
-
-const ai = new GoogleGenAI({ apiKey: getApiKey() });
+// Initializing the Google GenAI SDK with the API Key from environment variables.
+// The API key is obtained exclusively from process.env.API_KEY.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export interface AISearchResult {
   ids: string[];
@@ -30,6 +21,7 @@ export const searchProductsWithAI = async (query: string, products: Product[]): 
       category: p.category
     }));
 
+    // Using gemini-3-flash-preview for basic technical consultancy/search task.
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Você é o Consultor Técnico da Infinity Soluções Têxteis Representações Comerciais.
@@ -56,7 +48,9 @@ Instruções Cruciais de Fidelidade:
       }
     });
 
-    return JSON.parse(response.text || "{}");
+    // Accessing .text property directly as it is a getter.
+    const jsonStr = response.text?.trim() || "{}";
+    return JSON.parse(jsonStr);
   } catch (error) {
     console.error("Erro na busca IA:", error);
     return { ids: [], message: "No momento não consegui processar sua dúvida técnica. Por favor, utilize o botão do WhatsApp para falar diretamente com a Cristiane." };
@@ -65,8 +59,9 @@ Instruções Cruciais de Fidelidade:
 
 export const getIndustryNews = async (): Promise<BlogPost[]> => {
   try {
+    // Using gemini-3-pro-preview for complex reasoning and search-based content generation.
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3-pro-preview",
       contents: `Gere 6 posts informativos de ALTO NÍVEL focados EXCLUSIVAMENTE em TENDÊNCIAS 2026 para a área calçadista, baseados em fontes de autoridade:
 - Pantone (@pantone) -> Antecipação da Cor do Ano 2026 e paletas para o setor de calçados e acessórios.
 - Abicalçados (@abicalcadosoficial) -> Projeções de tendências globais e feiras internacionais para 2026.
@@ -100,9 +95,11 @@ REGRAS:
       }
     });
     
-    const text = response.text || "[]";
+    // Extracting text output using the .text property.
+    const text = response.text?.trim() || "[]";
     const posts: BlogPost[] = JSON.parse(text);
 
+    // Extracting URLs from groundingChunks when using googleSearch tool.
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     if (chunks && Array.isArray(chunks)) {
       posts.forEach((post, index) => {
