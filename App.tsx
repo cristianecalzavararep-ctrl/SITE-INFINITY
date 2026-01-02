@@ -1,376 +1,230 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Product, ViewState, BlogPost } from './types';
-import { PRODUCTS, BRANDS_DATA, INITIAL_BLOG_POSTS } from './data';
+import React, { useState, useEffect } from 'react';
+import { BRANDS_DATA } from './data';
 import Icon from './components/Icon';
-import { searchProductsWithAI, getIndustryNews, AISearchResult } from './services/geminiService';
 
 const CONTACT_INFO = {
-  name: "Cristiane",
+  title: "Representação Comercial",
   phone: "(35) 9 8424-8711",
-  whatsappNumber: "5535984248711",
   whatsappUrl: "https://wa.me/5535984248711",
-  whatsappWelcomeMsg: "Olá! Seja bem-vindo à Infinity Soluções Têxteis Representações Comerciais. Por favor, escolha uma de nossas representadas para falar com Cristiane:\n\n1. Pollibox Ecoadesivos\n2. Espugum - Ortholite Brasil\n3. Raima Têxtil\n4. Cordex Têxtil\n5. Solados SJB\n6. Totalmaq Máquinas\n7. Dayuse Embalagens\n\nDigite o número correspondente:",
+  whatsappWelcomeMsg: "Olá! Gostaria de mais informações sobre os produtos da Infinity.",
   email: "CRISTIANECALZAVARAREP@GMAIL.COM",
   location: "Franca - SP"
 };
 
-const ContactForm: React.FC = () => {
+const App: React.FC = () => {
+  const [scrolled, setScrolled] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
+    nome: '',
     email: '',
-    company: '',
-    phone: '',
-    interest: BRANDS_DATA[0]?.id || '',
-    message: ''
+    telefone: '',
+    mensagem: ''
   });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
-  if (submitted) {
-    return (
-      <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border-2 border-[#F7B718] text-center shadow-2xl animate-in zoom-in duration-500">
-        <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-8">
-          <Icon name="CheckCircle" size={32} className="text-green-500" />
-        </div>
-        <h3 className="text-2xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">Mensagem Enviada!</h3>
-        <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-10 max-w-[220px] mx-auto">
-          Agradecemos o contato. A Cristiane Calzavara retornará sua solicitação em breve.
-        </p>
-        <button 
-          onClick={() => setSubmitted(false)}
-          className="bg-[#1B345B] text-white px-10 py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.3em] hover:bg-black transition-all shadow-xl"
-        >
-          Enviar Nova Mensagem
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-2xl relative overflow-hidden text-left">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">Seu Nome</label>
-          <input 
-            required
-            className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all placeholder:text-slate-300 text-sm"
-            placeholder="Nome completo"
-            value={formData.name}
-            onChange={e => setFormData({...formData, name: e.target.value})}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">E-mail</label>
-          <input 
-            required
-            type="email"
-            className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all placeholder:text-slate-300 text-sm"
-            placeholder="exemplo@empresa.com"
-            value={formData.email}
-            onChange={e => setFormData({...formData, email: e.target.value})}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">Fábrica / Empresa</label>
-          <input 
-            required
-            className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all placeholder:text-slate-300 text-sm"
-            placeholder="Nome da sua fábrica"
-            value={formData.company}
-            onChange={e => setFormData({...formData, company: e.target.value})}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">Interesse</label>
-          <div className="relative">
-            <select 
-              className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all appearance-none cursor-pointer text-sm"
-              value={formData.interest}
-              onChange={e => setFormData({...formData, interest: e.target.value})}
-            >
-              {BRANDS_DATA.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-            </select>
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-              <Icon name="ChevronDown" size={16} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4 leading-tight block">Mensagem ou dúvida específica</label>
-        <textarea 
-          required
-          rows={3}
-          className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all resize-none placeholder:text-slate-300 text-sm"
-          placeholder="Não encontrou o que procurava? Temos parcerias que podemos indicar"
-          value={formData.message}
-          onChange={e => setFormData({...formData, message: e.target.value})}
-        />
-      </div>
-
-      <button type="submit" className="w-full bg-[#1B345B] hover:bg-black text-white py-5 rounded-xl font-black text-[10px] uppercase tracking-[0.4em] transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-4">
-        Enviar Mensagem <Icon name="Send" size={16} className="text-[#F7B718]" />
-      </button>
-    </form>
-  );
-};
-
-const Logo = ({ small = false }: { small?: boolean }) => (
-  <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.location.reload()}>
-    <div className="relative">
-      <svg 
-        viewBox="0 0 24 24" 
-        className="animate-spin-slow"
-        style={{ width: small ? 40 : 52, height: small ? 40 : 52 }}
-      >
-        <path fill="#1B345B" d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.5l-2.83 2.83l-2.83-2.83c-.97-.94-2.33-1.5-3.77-1.5c-2.98 0-5.4 2.42-5.4 5.4s2.42 5.4 5.4 5.4c1.44 0 2.8-.56 3.77-1.5l2.83-2.83l2.83 2.83c.97.94 2.33 1.5 3.77 1.5c2.98 0 5.4-2.42 5.4-5.4s-2.42-5.4-5.4-5.4zm-13.2 8.4c-1.65 0-3-1.35-3-3s1.35-3 3-3c.83 0 1.58.34 2.12.88l2.88 2.88l-2.88 2.88c-.54.54-1.29.88-2.12.88zm13.2 0c-.83 0-1.58-.34-2.12-.88l-2.88-2.88l2.88-2.88c.54-.54 1.29-.88 2.12-.88c1.65 0 3 1.35 3 3s-1.35 3-3 3z"/>
-        <path fill="#F7B718" d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.5l-2.83 2.83l2.83 2.83c.97.94 2.33 1.5 3.77 1.5c2.98 0 5.4-2.42 5.4-5.4s-2.42-5.4-5.4-5.4zm3 5.4c0 1.65-1.35 3-3 3c-.83 0-1.58-.34-2.12-.88l-2.88-2.88l2.88-2.88c.54-.54 1.29-.88 2.12-.88c1.65 0 3 1.35 3 3z"/>
-      </svg>
-    </div>
-    <div className="flex flex-col leading-none text-left">
-      <span className="text-2xl font-black text-[#1B345B] tracking-tighter uppercase">INFINITY</span>
-      <div className="flex flex-col">
-        <span className="text-[8px] font-black text-[#F7B718] tracking-[0.1em] uppercase">SOLUÇÕES TÊXTEIS</span>
-        <span className="text-[6px] font-black text-[#1B345B] opacity-70 tracking-[0.05em] uppercase">REPRESENTAÇÕES COMERCIAIS</span>
-      </div>
-    </div>
-  </div>
-);
-
-const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
-  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    if (!posts || posts.length <= 1) return;
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % posts.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [posts]);
-
-  // Se não houver posts, usamos os iniciais como garantia total
-  const displayPosts = posts && posts.length > 0 ? posts : INITIAL_BLOG_POSTS;
-
-  return (
-    <div className="relative w-full h-[500px] md:h-[650px] overflow-hidden bg-[#1B345B]">
-      {displayPosts.map((post, index) => (
-        <div 
-          key={post.id + index}
-          className={`absolute inset-0 transition-all duration-1000 flex items-center ${index === current ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'}`}
-        >
-          <img 
-            src={post.image} 
-            className="absolute inset-0 w-full h-full object-cover opacity-60" 
-            alt={post.title} 
-            loading={index === 0 ? "eager" : "lazy"}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1B345B] via-[#1B345B]/40 to-transparent" />
-          <div className="relative z-10 container mx-auto px-6 md:px-20 text-center md:text-left">
-            <span className="bg-[#F7B718] text-[#1B345B] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 inline-block">Tendência Global 2026</span>
-            <h2 className="text-white text-4xl md:text-7xl font-black mb-6 uppercase tracking-tighter leading-none max-w-4xl drop-shadow-2xl">{post.title}</h2>
-            <p className="text-white/90 text-lg italic max-w-xl border-l-4 border-[#F7B718] pl-6 mx-auto md:mx-0 font-medium">{post.excerpt}</p>
-          </div>
-        </div>
-      ))}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-30">
-        {displayPosts.map((_, i) => (
-          <button 
-            key={i} 
-            onClick={() => setCurrent(i)}
-            className={`h-2 rounded-full transition-all ${i === current ? 'w-14 bg-[#F7B718]' : 'w-4 bg-white/40 hover:bg-white/70'}`} 
-            aria-label={`Slide ${i + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<ViewState>('catalog');
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [aiResult, setAiResult] = useState<AISearchResult | null>(null);
-  const [aiLoading, setAiLoading] = useState(false);
-
-  const whatsappBrandUrl = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
-
-  const loadNews = useCallback(async () => {
-    try {
-      const news = await getIndustryNews();
-      if (news && news.length > 0) {
-        setBlogPosts(news);
-      }
-    } catch (err) {
-      console.warn("Usando posts de reserva devido a falha na IA:", err);
-      // Mantém os posts iniciais que já estão no state
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    loadNews();
-  }, [loadNews]);
+  const waLink = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const scrollToFornecedores = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim() || aiLoading) return;
-    
-    setAiLoading(true);
-    setAiResult(null);
-    try {
-      const result = await searchProductsWithAI(searchQuery, PRODUCTS);
-      setAiResult(result);
-    } catch (err) {
-      setAiResult({ 
-        ids: [], 
-        message: "Ocorreu um erro na consulta inteligente. Por favor, utilize o botão de WhatsApp para falar diretamente com a Cristiane." 
-      });
-    } finally {
-      setAiLoading(false);
+    const element = document.getElementById('fornecedores');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const msg = `SOLICITAÇÃO DE ATENDIMENTO - INFINITY\n\nNome: ${formData.nome}\nE-mail: ${formData.email}\nTelefone: ${formData.telefone}\n\nDúvida/Não encontrou: ${formData.mensagem}`;
+    window.open(`${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
+  const Logo = ({ light = false }: { light?: boolean }) => (
+    <div className="flex items-center gap-2">
+      <svg className="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill={light ? "#FFFFFF" : "#1B345B"} d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.5l-2.83 2.83l-2.83-2.83c-.97-.94-2.33-1.5-3.77-1.5c-2.98 0-5.4 2.42-5.4 5.4s2.42 5.4 5.4 5.4c1.44 0 2.8-.56 3.77-1.5l2.83-2.83l2.83 2.83c.97.94 2.33 1.5 3.77 1.5c2.98 0 5.4-2.42 5.4-5.4s-2.42-5.4-5.4-5.4zm-13.2 8.4c-1.65 0-3-1.35-3-3s1.35-3 3-3c.83 0 1.58.34 2.12.88l2.88 2.88l-2.88 2.88c-.54.54-1.29.88-2.12.88zm13.2 0c-.83 0-1.58-.34-2.12-.88l-2.88-2.88l2.88-2.88c.54-.54 1.29-.88 2.12-.88c1.65 0 3 1.35 3 3s-1.35 3-3 3z"/>
+        <path fill="#F7B718" d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.5l-2.83 2.83l2.83 2.83c.97.94 2.33 1.5 3.77 1.5c2.98 0 5.4-2.42 5.4-5.4s-2.42-5.4-5.4-5.4zm3 5.4c0 1.65-1.35 3-3 3c-.83 0-1.58-.34-2.12-.88l-2.88-2.88l2.88-2.88c.54-.54 1.29-.88 2.12-.88c1.65 0 3 1.35 3 3z"/>
+      </svg>
+      <div className="flex flex-col leading-none">
+        <span className={`text-base md:text-lg font-black tracking-tighter ${light ? 'text-white' : 'text-[#1B345B]'}`}>INFINITY</span>
+        <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-[#F7B718]">Soluções Têxteis</span>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
-      <header className="fixed top-0 w-full h-24 bg-white shadow-xl z-50 flex items-center justify-between px-6 md:px-12 border-b-4 border-[#F7B718]">
-        <Logo />
-        <nav className="hidden md:flex items-center gap-8">
-          <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="text-[10px] font-black uppercase tracking-widest text-[#1B345B] hover:text-[#F7B718] transition-colors">Home</button>
-          <a href="#contato" className="text-[10px] font-black uppercase tracking-widest text-[#1B345B] hover:text-[#F7B718] transition-colors">Contato</a>
-          <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#1B345B] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all">
-            WhatsApp <Icon name="MessageCircle" size={16} className="text-[#F7B718]" />
+    <div className="min-h-screen bg-white font-sans text-slate-900 overflow-x-hidden selection:bg-[#F7B718]/30">
+      
+      {/* HEADER NAVBAR */}
+      <header className={`fixed top-0 w-full h-20 z-50 transition-all duration-300 flex items-center justify-between px-6 md:px-20 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm h-16' : 'bg-transparent'}`}>
+        <Logo light={!scrolled} />
+        
+        <nav className="hidden lg:flex items-center gap-10">
+          <a href="#fornecedores" onClick={scrollToFornecedores} className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${scrolled ? 'text-[#1B345B]' : 'text-white'} hover:text-[#F7B718]`}>Fornecedores</a>
+          <a href={waLink} target="_blank" className={`px-6 py-2.5 text-[10px] font-black uppercase tracking-widest transition-all ${scrolled ? 'bg-[#1B345B] text-white' : 'bg-[#F7B718] text-[#1B345B]'}`}>
+            Aguardamos seu contato
           </a>
         </nav>
       </header>
-      
-      <div className="h-24" />
 
-      <main className="flex-grow">
-        <RotatingBanner posts={blogPosts} />
+      {/* HERO SECTION */}
+      <section className="relative h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1600&auto=format&fit=crop" 
+            className="w-full h-full object-cover"
+            alt="Moda Calçados"
+          />
+          <div className="absolute inset-0 bg-[#1B345B]/80"></div>
+        </div>
         
-        <section className="py-20 px-6 max-w-7xl mx-auto text-center">
-          <h1 className="text-[#1B345B] text-4xl md:text-6xl font-black uppercase tracking-tighter mb-12">Infinity <span className="text-[#F7B718]">IA</span></h1>
-          <form onSubmit={handleSearch} className="max-w-3xl mx-auto relative mb-20 group">
-            <input 
-              className="w-full p-6 md:p-8 bg-slate-100 rounded-3xl outline-none font-bold text-[#1B345B] border-2 border-transparent focus:border-[#F7B718] transition-all text-lg shadow-inner pr-40"
-              placeholder="O que você procura para sua produção hoje?"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-            <button 
-              disabled={aiLoading}
-              className="absolute right-4 top-4 bg-[#1B345B] text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all min-w-[140px] disabled:opacity-50"
-            >
-              {aiLoading ? 'CONSULTANDO...' : 'CONSULTAR'}
-            </button>
-          </form>
-
-          {aiResult && (
-            <div className="mb-20 p-8 bg-white rounded-[3rem] border-2 border-[#F7B718] text-left max-w-3xl mx-auto shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <p className="text-[#1B345B] font-bold text-lg leading-relaxed italic">"{aiResult.message}"</p>
-              <div className="mt-8 flex gap-4">
-                <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all inline-block">Falar com Cristiane agora</a>
-                <button onClick={() => setAiResult(null)} className="text-slate-400 font-black text-[9px] uppercase tracking-widest hover:text-slate-600 transition-colors">Limpar Consulta</button>
-              </div>
+        <div className="container mx-auto px-6 md:px-20 relative z-10 text-center md:text-left">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-8 uppercase tracking-tighter">
+              TECNOLOGIA DE PONTA <br/>
+              PARA O SEU <span className="text-[#F7B718]">CALÇADO.</span>
+            </h1>
+            <p className="text-slate-300 text-lg md:text-xl font-medium max-w-xl leading-relaxed mb-10">
+              Soluções estratégicas em componentes para a indústria calçadista. Materiais de alta performance e inovação constante.
+            </p>
+            <div className="flex justify-center md:justify-start">
+              <a href="#fornecedores" onClick={scrollToFornecedores} className="bg-[#F7B718] text-[#1B345B] px-12 py-5 font-black uppercase tracking-widest text-[11px] hover:bg-white transition-all shadow-xl">
+                Ver Fornecedores
+              </a>
             </div>
-          )}
+          </div>
+        </div>
+      </section>
 
-          <div className="mb-20">
-            <h2 className="text-[#1B345B] text-3xl font-black uppercase tracking-tighter mb-12 flex items-center justify-center gap-4">
-              <div className="h-1 w-12 bg-[#F7B718] rounded-full"></div>
-              NOSSAS REPRESENTADAS
-              <div className="h-1 w-12 bg-[#F7B718] rounded-full"></div>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-left">
-              {BRANDS_DATA.map(brand => (
-                <div key={brand.id} className="p-10 bg-white rounded-[3rem] border-2 border-slate-50 shadow-xl hover:-translate-y-2 transition-all group">
-                  <div className="w-12 h-2 mb-6 rounded-full group-hover:w-20 transition-all" style={{ backgroundColor: brand.color }}></div>
-                  <h3 className="text-2xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">{brand.name}</h3>
-                  <p className="text-slate-500 font-medium mb-8 leading-relaxed italic line-clamp-3">"{brand.description}"</p>
-                  <a href={`${whatsappBrandUrl}&text=Olá! Gostaria de informações sobre a ${brand.name}`} target="_blank" rel="noopener noreferrer" className="text-[#1B345B] font-black text-[10px] uppercase tracking-widest flex items-center gap-2 hover:translate-x-2 transition-transform">
-                    Consultar Orçamento <Icon name="ArrowRight" size={14} className="text-[#F7B718]" />
+      {/* LISTA DE REPRESENTADAS */}
+      <section id="fornecedores" className="py-20 bg-white">
+        <div className="container mx-auto px-6 md:px-20">
+          <div className="mb-12 border-l-4 border-[#F7B718] pl-6">
+            <h2 className="text-[#1B345B] text-3xl font-black uppercase tracking-tighter mb-1">Nossas Representadas</h2>
+            <p className="text-slate-500 font-medium text-sm">Qualidade e produtividade para sua indústria.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {BRANDS_DATA.map((brand) => (
+              <div key={brand.id} className="group p-6 bg-slate-50 hover:bg-[#1B345B] transition-all duration-500 flex flex-col justify-between border border-slate-100 min-h-[260px]">
+                <div>
+                  <h3 className="text-lg font-black uppercase tracking-tighter mb-3 group-hover:text-[#F7B718] transition-colors">{brand.name}</h3>
+                  <p className="text-slate-500 group-hover:text-slate-300 text-xs leading-relaxed">
+                    {brand.description}
+                  </p>
+                </div>
+                <div className="mt-6">
+                  <a href={waLink} target="_blank" className="text-[9px] font-black uppercase tracking-widest text-[#1B345B] group-hover:text-white flex items-center gap-2">
+                    Aguardamos seu contato <Icon name="ArrowRight" size={12} />
                   </a>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="contato" className="py-24 bg-slate-50 border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-5xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">Fale com a gente</h2>
-              <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Sua produção merece componentes de alta performance.</p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
-              <div className="bg-[#1B345B] p-10 md:p-14 rounded-[3.5rem] text-white shadow-2xl flex flex-col justify-center">
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-10 text-[#F7B718]">Canais Oficiais</h3>
-                <div className="space-y-10">
-                  <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center">
-                      <Icon name="User" className="text-[#F7B718]" size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mb-1">Responsável</p>
-                      <p className="text-xl font-black">{CONTACT_INFO.name} Calzavara</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center">
-                      <Icon name="Phone" className="text-[#F7B718]" size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mb-1">WhatsApp</p>
-                      <p className="text-xl font-black">{CONTACT_INFO.phone}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center">
-                      <Icon name="Mail" className="text-[#F7B718]" size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mb-1">E-mail</p>
-                      <p className="text-sm font-bold opacity-80 uppercase break-all">{CONTACT_INFO.email}</p>
-                    </div>
-                  </div>
-                </div>
               </div>
-              <ContactForm />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FORMULÁRIO DE ATENDIMENTO - COMPACTO */}
+      <section className="py-16 bg-slate-50 border-y border-slate-100">
+        <div className="container mx-auto px-6 md:px-20 max-w-5xl">
+          <div className="bg-white p-8 md:p-12 shadow-sm border border-slate-200">
+            <div className="text-center mb-10">
+              <h3 className="text-[#1B345B] text-2xl md:text-3xl font-black uppercase tracking-tighter mb-2">Solicitação de Atendimento</h3>
+              <p className="text-slate-500 font-medium text-sm">Não encontrou o que procurava? Preencha os campos abaixo.</p>
+            </div>
+            
+            <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <input 
+                  type="text" 
+                  placeholder="Nome" 
+                  className="w-full p-4 bg-slate-50 border border-slate-100 outline-none focus:border-[#F7B718] text-sm font-medium"
+                  value={formData.nome}
+                  onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                  required
+                />
+                <input 
+                  type="email" 
+                  placeholder="E-mail" 
+                  className="w-full p-4 bg-slate-50 border border-slate-100 outline-none focus:border-[#F7B718] text-sm font-medium"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  required
+                />
+                <input 
+                  type="text" 
+                  placeholder="Telefone" 
+                  className="w-full p-4 bg-slate-50 border border-slate-100 outline-none focus:border-[#F7B718] text-sm font-medium"
+                  value={formData.telefone}
+                  onChange={(e) => setFormData({...formData, telefone: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-4">
+                <textarea 
+                  placeholder="Dúvida / O que não encontrou?" 
+                  className="w-full h-full p-4 bg-slate-50 border border-slate-100 outline-none focus:border-[#F7B718] text-sm font-medium min-h-[150px]"
+                  value={formData.mensagem}
+                  onChange={(e) => setFormData({...formData, mensagem: e.target.value})}
+                  required
+                />
+                <button type="submit" className="w-full bg-[#1B345B] text-white py-4 font-black uppercase tracking-widest text-[10px] hover:bg-[#F7B718] hover:text-[#1B345B] transition-all">
+                  Enviar Solicitação
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTATO COMPACTO */}
+      <section id="contato" className="py-16 bg-white border-b border-slate-50">
+        <div className="container mx-auto px-6 md:px-20">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-24">
+            <div className="flex items-center gap-4">
+              <Icon name="Phone" size={20} className="text-[#F7B718]" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Telefone</p>
+                <p className="font-bold text-base text-[#1B345B]">{CONTACT_INFO.phone}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <Icon name="Mail" size={20} className="text-[#F7B718]" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">E-mail</p>
+                <p className="font-bold text-base text-[#1B345B] uppercase">{CONTACT_INFO.email}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <Icon name="MapPin" size={20} className="text-[#F7B718]" />
+              <div>
+                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Localização</p>
+                <p className="font-bold text-base text-[#1B345B]">{CONTACT_INFO.location}</p>
+              </div>
             </div>
           </div>
-        </section>
-      </main>
-
-      <a 
-        href={whatsappBrandUrl}
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 md:bottom-12 md:right-12 z-50 group scale-110 md:scale-125"
-      >
-        <div className="absolute inset-0 bg-green-500 blur-2xl opacity-40 group-hover:opacity-60 transition-all rounded-full animate-pulse"></div>
-        <div className="relative w-16 h-16 md:w-16 md:h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl transition-all group-hover:scale-110 border-4 border-white/20">
-          <Icon name="MessageCircle" size={32} />
         </div>
-      </a>
+      </section>
 
-      <footer className="bg-white border-t-2 border-[#F7B718] py-16 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <Logo small />
-          <div className="text-center md:text-right">
-            <p className="text-[10px] font-black text-[#1B345B] uppercase tracking-widest mb-2">© 2026 Infinity Soluções Têxteis Representações Comerciais</p>
-            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Franca - SP | Polo Calçadista de Excelência</p>
-          </div>
+      <footer className="py-10 bg-slate-50">
+        <div className="container mx-auto px-6 md:px-20 flex flex-col md:flex-row justify-between items-center gap-6">
+          <Logo />
+          <p className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">
+            © 2026 INFINITY REPRESENTAÇÕES - FRANCA/SP
+          </p>
         </div>
       </footer>
+
+      {/* WHATSAPP FLOAT */}
+      <a href={waLink} target="_blank" className="fixed bottom-6 right-6 z-50">
+        <div className="bg-[#25D366] text-white p-3.5 rounded-full shadow-xl hover:scale-110 transition-transform">
+          <Icon name="MessageCircle" size={24} />
+        </div>
+      </a>
     </div>
   );
 };
