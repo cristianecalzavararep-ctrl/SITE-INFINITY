@@ -10,7 +10,7 @@ const CONTACT_INFO = {
   phone: "(35) 9 8424-8711",
   whatsappNumber: "5535984248711",
   whatsappUrl: "https://wa.me/5535984248711",
-  whatsappWelcomeMsg: "Olá! Seja bem-vindo à Infinity Soluções Têxteis Representações Comerciais.",
+  whatsappWelcomeMsg: "Olá! Seja bem-vindo à Infinity Soluções Têxteis Representações Comerciais. Por favor, escolha uma de nossas representadas para falar com Cristiane:\n\n1. Pollibox Ecoadesivos\n2. Espugum - Ortholite Brasil\n3. Raima Têxtil\n4. Cordex Têxtil\n5. Solados SJB\n6. Totalmaq Máquinas\n7. Dayuse Embalagens\n\nDigite o número correspondente:",
   email: "CRISTIANECALZAVARAREP@GMAIL.COM",
   location: "Franca - SP"
 };
@@ -54,7 +54,7 @@ const ContactForm: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 bg-white p-10 md:p-14 rounded-[4rem] border border-slate-100 shadow-2xl relative overflow-hidden">
+    <form onSubmit={handleSubmit} className="space-y-8 bg-white p-10 md:p-14 rounded-[3rem] border border-slate-100 shadow-2xl relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-[#F7B718]/5 rounded-bl-full pointer-events-none"></div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -197,6 +197,8 @@ const App: React.FC = () => {
   const [aiResult, setAiResult] = useState<AISearchResult | null>(null);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
+  const whatsappBrandUrl = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
+
   useEffect(() => {
     loadNews();
   }, []);
@@ -244,7 +246,7 @@ const App: React.FC = () => {
             Atendimento
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#F7B718] transition-all group-hover:w-full"></span>
           </button>
-          <a href={CONTACT_INFO.whatsappUrl} target="_blank" rel="noopener noreferrer" className="bg-[#1B345B] hover:bg-black text-white px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4 transition-all shadow-xl hover:-translate-y-1 active:translate-y-0">
+          <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#1B345B] hover:bg-black text-white px-10 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] flex items-center gap-4 transition-all shadow-xl hover:-translate-y-1 active:translate-y-0">
              WhatsApp <Icon name="MessageCircle" size={18} className="text-[#F7B718]" />
           </a>
         </nav>
@@ -262,7 +264,7 @@ const App: React.FC = () => {
           <>
             <RotatingBanner posts={blogPosts} />
             
-            <section className="bg-white py-16 md:py-28 px-6 border-b border-slate-100 relative overflow-hidden">
+            <section className="bg-white py-16 md:py-24 px-6 border-b border-slate-100 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-96 h-96 bg-[#F7B718]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
               <div className="max-w-4xl mx-auto text-center relative z-10">
                 <div className="inline-flex items-center gap-3 bg-[#1B345B]/5 px-6 py-2 rounded-full mb-8">
@@ -270,10 +272,10 @@ const App: React.FC = () => {
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1B345B]">Tecnologia Gemini AI</span>
                 </div>
                 <h1 className="text-[#1B345B] text-3xl md:text-5xl font-black mb-10 uppercase tracking-tighter leading-none">
-                  Consultoria <span className="text-[#F7B718]">Técnica Digital</span>
+                  Infinity <span className="text-[#F7B718]">IA</span>
                 </h1>
                 <p className="text-slate-400 text-sm md:text-base font-bold uppercase tracking-[0.2em] mb-12 max-w-xl mx-auto">
-                  Tire dúvidas técnicas sobre adesivos, têxteis e solados instantaneamente
+                  Qual produto ou artigo está buscando hoje?
                 </p>
                 <form onSubmit={handleAISearch} className="relative shadow-[0_30px_60px_-15px_rgba(27,52,91,0.2)] rounded-3xl overflow-hidden flex items-center bg-white border-2 border-slate-100 focus-within:border-[#F7B718] transition-all max-w-3xl mx-auto p-2">
                   <input 
@@ -300,7 +302,7 @@ const App: React.FC = () => {
                            "{aiResult.message}"
                          </p>
                          <div className="pt-6 border-t border-slate-100 flex flex-wrap gap-4">
-                            <a href={CONTACT_INFO.whatsappUrl} className="bg-green-50 text-green-700 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-100 transition-colors flex items-center gap-2">
+                            <a href={whatsappBrandUrl} className="bg-green-50 text-green-700 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-green-100 transition-colors flex items-center gap-2">
                               Falar com Cristiane <Icon name="ArrowRight" size={14} />
                             </a>
                          </div>
@@ -320,7 +322,7 @@ const App: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14">
                 {BRANDS_DATA.map(brand => (
-                  <div key={brand.id} className="group bg-white p-10 md:p-14 rounded-[3.5rem] md:rounded-[4.5rem] border border-slate-100 hover:border-[#F7B718] transition-all shadow-xl hover:shadow-[0_40px_80px_-20px_rgba(247,183,24,0.15)] flex flex-col h-full transform hover:-translate-y-4">
+                  <div key={brand.id} className="group bg-white p-10 md:p-14 rounded-[3rem] border border-slate-100 hover:border-[#F7B718] transition-all shadow-xl hover:shadow-[0_40px_80px_-20px_rgba(247,183,24,0.15)] flex flex-col h-full transform hover:-translate-y-4">
                     <div className="flex items-center gap-6 mb-10">
                       <div className="w-3 h-14 rounded-full shadow-lg" style={{ backgroundColor: brand.color }}></div>
                       <h3 className="text-2xl md:text-3xl font-black text-[#1B345B] uppercase leading-[1.1] tracking-tighter group-hover:text-[#F7B718] transition-colors">{brand.name}</h3>
@@ -329,12 +331,12 @@ const App: React.FC = () => {
                       "{brand.description}"
                     </p>
                     <a 
-                      href={`${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent("Olá Cristiane! Gostaria de conhecer melhor o catálogo da " + brand.name)}`}
+                      href={whatsappBrandUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-4 bg-[#1B345B] text-white py-5 md:py-6 rounded-2xl text-[11px] md:text-[12px] font-black uppercase tracking-[0.3em] hover:bg-black transition-all shadow-lg hover:shadow-[#1B345B]/30"
                     >
-                      Solicitar Catálogo <Icon name="ArrowRight" size={18} />
+                      Fale Conosco <Icon name="ArrowRight" size={18} />
                     </a>
                   </div>
                 ))}
@@ -344,16 +346,17 @@ const App: React.FC = () => {
         )}
 
         {currentView === 'contact' && (
-          <section className="max-w-7xl mx-auto px-6 py-24 md:py-32">
+          <section className="max-w-7xl mx-auto px-6 py-20 md:py-28">
              <div className="text-center mb-16">
                <button onClick={() => setCurrentView('catalog')} className="bg-slate-100 hover:bg-[#F7B718] text-[#1B345B] px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all mb-12 flex items-center gap-3 mx-auto">
                  <Icon name="ArrowLeft" size={16} /> Voltar ao Início
                </button>
                <h2 className="text-4xl md:text-6xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">Entre em Contato</h2>
+               <p className="text-slate-500 font-bold uppercase tracking-[0.3em] text-[10px] md:text-[14px] mb-2">Não encontrou o que queria? Temos vários parceiros comerciais que podemos direcionar</p>
                <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px] md:text-[12px]">Fale diretamente com nossa diretoria comercial</p>
              </div>
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
-                <div className="bg-[#1B345B] p-12 md:p-20 rounded-[4rem] text-white shadow-3xl relative overflow-hidden">
+                <div className="bg-[#1B345B] p-8 md:p-12 rounded-[3rem] text-white shadow-3xl relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                     <Icon name="Infinity" size={600} className="absolute -top-48 -left-48 animate-spin-slow" />
                   </div>
@@ -400,7 +403,7 @@ const App: React.FC = () => {
 
       {/* Botão WhatsApp Flutuante Estilizado */}
       <a 
-        href={CONTACT_INFO.whatsappUrl}
+        href={whatsappBrandUrl}
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-8 right-8 md:bottom-12 md:right-12 z-[1000] group"
@@ -413,47 +416,45 @@ const App: React.FC = () => {
         </div>
       </a>
 
-      <footer className="bg-slate-950 text-white pt-24 md:pt-40 pb-16 px-6 md:px-16 relative mt-auto border-t border-white/5">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-40 mb-24">
+      <footer className="bg-slate-950 text-white pt-16 md:pt-24 pb-12 px-6 md:px-16 relative mt-auto border-t border-white/5">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 mb-16">
           <div className="max-w-md">
-            <Logo light />
-            <p className="mt-10 text-slate-500 text-base md:text-lg font-medium leading-relaxed italic opacity-80">
+            <Logo light small />
+            <p className="mt-8 text-slate-500 text-sm md:text-base font-medium leading-relaxed italic opacity-80">
               Transformando a indústria calçadista através da inovação têxtil e soluções adesivas sustentáveis. Representando as maiores marcas globais em Franca-SP.
             </p>
-            <div className="mt-12 flex gap-6">
-              <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
-                <Icon name="Instagram" size={20} className="text-white group-hover:text-black" />
+            <div className="mt-10 flex gap-6">
+              <a href="#" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
+                <Icon name="Instagram" size={18} className="text-white group-hover:text-black" />
               </a>
-              <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
-                <Icon name="Linkedin" size={20} className="text-white group-hover:text-black" />
+              <a href="#" className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
+                <Icon name="Linkedin" size={18} className="text-white group-hover:text-black" />
               </a>
             </div>
           </div>
           
           <div className="flex flex-col lg:items-end gap-2">
-             <span className="text-[11px] font-black text-[#F7B718] uppercase tracking-[0.5em] mb-10">Central de Negócios</span>
-             <div className="space-y-6 text-left lg:text-right">
-               <p className="text-3xl md:text-5xl font-black tracking-tighter text-white/95">Cristiane Calzavara</p>
-               <p className="text-2xl md:text-3xl font-black tracking-tight text-[#F7B718]">{CONTACT_INFO.phone}</p>
-               <p className="text-base font-bold text-slate-500 lowercase tracking-wide border-b-2 border-white/10 pb-2">{CONTACT_INFO.email}</p>
-               <p className="text-[12px] font-black text-white/40 uppercase tracking-[0.4em] pt-4 flex items-center gap-4 lg:justify-end">
-                 <Icon name="MapPin" size={18} className="text-[#F7B718]" /> {CONTACT_INFO.location}
+             <span className="text-[10px] font-black text-[#F7B718] uppercase tracking-[0.5em] mb-6">Central de Negócios</span>
+             <div className="space-y-4 text-left lg:text-right">
+               <p className="text-2xl md:text-4xl font-black tracking-tighter text-white/95">Cristiane Calzavara</p>
+               <p className="text-xl md:text-2xl font-black tracking-tight text-[#F7B718]">{CONTACT_INFO.phone}</p>
+               <p className="text-sm font-bold text-slate-500 lowercase tracking-wide border-b border-white/10 pb-2">{CONTACT_INFO.email}</p>
+               <p className="text-[11px] font-black text-white/40 uppercase tracking-[0.4em] pt-2 flex items-center gap-3 lg:justify-end">
+                 <Icon name="MapPin" size={16} className="text-[#F7B718]" /> {CONTACT_INFO.location}
                </p>
              </div>
           </div>
         </div>
         
-        <div className="max-w-7xl mx-auto pt-14 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex flex-col gap-2 items-center md:items-start">
-            <p className="text-[10px] font-black uppercase tracking-[0.7em] text-slate-600">
+        <div className="max-w-7xl mx-auto pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex flex-col gap-1 items-center md:items-start">
+            <p className="text-[9px] font-black uppercase tracking-[0.7em] text-slate-600">
               INFINITY SOLUÇÕES TÊXTEIS © 2026
             </p>
-            <p className="text-[8px] font-bold text-slate-800 uppercase tracking-widest">Tecnologia, Inovação e Representação Industrial</p>
           </div>
-          <div className="flex gap-12">
-             <button onClick={() => { setCurrentView('catalog'); window.scrollTo(0,0); }} className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-[#F7B718] transition-colors">Home</button>
-             <button onClick={() => { setCurrentView('contact'); window.scrollTo(0,0); }} className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-[#F7B718] transition-colors">Contato</button>
-             <button className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-[#F7B718] transition-colors">Privacidade</button>
+          <div className="flex gap-10">
+             <button onClick={() => { setCurrentView('catalog'); window.scrollTo(0,0); }} className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-[#F7B718] transition-colors">Home</button>
+             <button onClick={() => { setCurrentView('contact'); window.scrollTo(0,0); }} className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 hover:text-[#F7B718] transition-colors">Contato</button>
           </div>
         </div>
       </footer>
