@@ -15,7 +15,6 @@ const CONTACT_INFO = {
   location: "Franca - SP"
 };
 
-// Componente de formulário de contato para capturar leads e solicitações.
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -387,7 +386,6 @@ const App: React.FC = () => {
         )}
       </main>
 
-      {/* Botão WhatsApp Flutuante */}
       <a 
         href={whatsappBrandUrl}
         target="_blank" 
@@ -402,7 +400,6 @@ const App: React.FC = () => {
         </div>
       </a>
 
-      {/* Footer Compacto */}
       <footer className="bg-slate-950 text-white pt-10 pb-8 px-6 md:px-12 relative mt-auto border-t border-white/5">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-8">
           <div>
@@ -410,14 +407,6 @@ const App: React.FC = () => {
             <p className="mt-4 text-slate-500 text-xs md:text-sm font-medium leading-relaxed italic opacity-70 max-w-sm">
               REPRESENTAÇÃO COMERCIAL FRANCA -SP.
             </p>
-            <div className="mt-6 flex gap-4">
-              <a href="#" className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
-                <Icon name="Instagram" size={16} className="text-white group-hover:text-black" />
-              </a>
-              <a href="#" className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
-                <Icon name="Linkedin" size={16} className="text-white group-hover:text-black" />
-              </a>
-            </div>
           </div>
           
           <div className="flex flex-col lg:items-end justify-center">
@@ -429,7 +418,7 @@ const App: React.FC = () => {
           </div>
         </div>
         
-        <div className="max-w-7xl mx-auto pt-6 border-t border-white/5 flex flex-col md:row justify-between items-center gap-4">
+        <div className="max-w-7xl mx-auto pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[8px] font-black uppercase tracking-[0.5em] text-slate-700">
             INFINITY SOLUÇÕES TÊXTEIS © 2026
           </p>
