@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Product, ViewState, BlogPost } from './types';
 import { PRODUCTS, BRANDS_DATA, INITIAL_BLOG_POSTS } from './data';
 import Icon from './components/Icon';
@@ -150,23 +150,29 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    if (posts.length <= 1) return;
+    if (!posts || posts.length <= 1) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % posts.length);
-    }, 6000);
+    }, 5000);
     return () => clearInterval(timer);
-  }, [posts.length]);
+  }, [posts]);
 
-  if (!posts || posts.length === 0) return <div className="h-[500px] bg-[#1B345B] animate-pulse" />;
+  // Se não houver posts, usamos os iniciais como garantia total
+  const displayPosts = posts && posts.length > 0 ? posts : INITIAL_BLOG_POSTS;
 
   return (
     <div className="relative w-full h-[500px] md:h-[650px] overflow-hidden bg-[#1B345B]">
-      {posts.map((post, index) => (
+      {displayPosts.map((post, index) => (
         <div 
           key={post.id + index}
           className={`absolute inset-0 transition-all duration-1000 flex items-center ${index === current ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'}`}
         >
-          <img src={post.image} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" />
+          <img 
+            src={post.image} 
+            className="absolute inset-0 w-full h-full object-cover opacity-60" 
+            alt={post.title} 
+            loading={index === 0 ? "eager" : "lazy"}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1B345B] via-[#1B345B]/40 to-transparent" />
           <div className="relative z-10 container mx-auto px-6 md:px-20 text-center md:text-left">
             <span className="bg-[#F7B718] text-[#1B345B] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 inline-block">Tendência Global 2026</span>
@@ -176,11 +182,12 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
         </div>
       ))}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-30">
-        {posts.map((_, i) => (
+        {displayPosts.map((_, i) => (
           <button 
             key={i} 
             onClick={() => setCurrent(i)}
             className={`h-2 rounded-full transition-all ${i === current ? 'w-14 bg-[#F7B718]' : 'w-4 bg-white/40 hover:bg-white/70'}`} 
+            aria-label={`Slide ${i + 1}`}
           />
         ))}
       </div>
@@ -197,36 +204,48 @@ const App: React.FC = () => {
 
   const whatsappBrandUrl = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
 
-  useEffect(() => {
-    // Busca notícias dinâmicas assim que carregar para dar vida ao site
-    getIndustryNews().then(news => {
+  const loadNews = useCallback(async () => {
+    try {
+      const news = await getIndustryNews();
       if (news && news.length > 0) {
         setBlogPosts(news);
       }
-    });
+    } catch (err) {
+      console.warn("Usando posts de reserva devido a falha na IA:", err);
+      // Mantém os posts iniciais que já estão no state
+    }
   }, []);
+
+  useEffect(() => {
+    loadNews();
+  }, [loadNews]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim() || aiLoading) return;
+    
     setAiLoading(true);
+    setAiResult(null);
     try {
       const result = await searchProductsWithAI(searchQuery, PRODUCTS);
       setAiResult(result);
     } catch (err) {
-      console.error(err);
+      setAiResult({ 
+        ids: [], 
+        message: "Ocorreu um erro na consulta inteligente. Por favor, utilize o botão de WhatsApp para falar diretamente com a Cristiane." 
+      });
     } finally {
       setAiLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
       <header className="fixed top-0 w-full h-24 bg-white shadow-xl z-50 flex items-center justify-between px-6 md:px-12 border-b-4 border-[#F7B718]">
         <Logo />
         <nav className="hidden md:flex items-center gap-8">
-          <button onClick={() => setCurrentView('catalog')} className="text-[10px] font-black uppercase tracking-widest text-[#1B345B]">Home</button>
-          <a href="#contato" className="text-[10px] font-black uppercase tracking-widest text-[#1B345B]">Contato</a>
+          <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="text-[10px] font-black uppercase tracking-widest text-[#1B345B] hover:text-[#F7B718] transition-colors">Home</button>
+          <a href="#contato" className="text-[10px] font-black uppercase tracking-widest text-[#1B345B] hover:text-[#F7B718] transition-colors">Contato</a>
           <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#1B345B] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-black transition-all">
             WhatsApp <Icon name="MessageCircle" size={16} className="text-[#F7B718]" />
           </a>
@@ -235,19 +254,22 @@ const App: React.FC = () => {
       
       <div className="h-24" />
 
-      <main>
+      <main className="flex-grow">
         <RotatingBanner posts={blogPosts} />
         
         <section className="py-20 px-6 max-w-7xl mx-auto text-center">
           <h1 className="text-[#1B345B] text-4xl md:text-6xl font-black uppercase tracking-tighter mb-12">Infinity <span className="text-[#F7B718]">IA</span></h1>
-          <form onSubmit={handleSearch} className="max-w-3xl mx-auto relative mb-20">
+          <form onSubmit={handleSearch} className="max-w-3xl mx-auto relative mb-20 group">
             <input 
-              className="w-full p-6 md:p-8 bg-slate-100 rounded-3xl outline-none font-bold text-[#1B345B] border-2 border-transparent focus:border-[#F7B718] transition-all text-lg shadow-inner"
+              className="w-full p-6 md:p-8 bg-slate-100 rounded-3xl outline-none font-bold text-[#1B345B] border-2 border-transparent focus:border-[#F7B718] transition-all text-lg shadow-inner pr-40"
               placeholder="O que você procura para sua produção hoje?"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
             />
-            <button className="absolute right-4 top-4 bg-[#1B345B] text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all min-w-[140px]">
+            <button 
+              disabled={aiLoading}
+              className="absolute right-4 top-4 bg-[#1B345B] text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all min-w-[140px] disabled:opacity-50"
+            >
               {aiLoading ? 'CONSULTANDO...' : 'CONSULTAR'}
             </button>
           </form>
@@ -255,8 +277,9 @@ const App: React.FC = () => {
           {aiResult && (
             <div className="mb-20 p-8 bg-white rounded-[3rem] border-2 border-[#F7B718] text-left max-w-3xl mx-auto shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
               <p className="text-[#1B345B] font-bold text-lg leading-relaxed italic">"{aiResult.message}"</p>
-              <div className="mt-8">
+              <div className="mt-8 flex gap-4">
                 <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all inline-block">Falar com Cristiane agora</a>
+                <button onClick={() => setAiResult(null)} className="text-slate-400 font-black text-[9px] uppercase tracking-widest hover:text-slate-600 transition-colors">Limpar Consulta</button>
               </div>
             </div>
           )}
@@ -267,13 +290,13 @@ const App: React.FC = () => {
               NOSSAS REPRESENTADAS
               <div className="h-1 w-12 bg-[#F7B718] rounded-full"></div>
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-left">
               {BRANDS_DATA.map(brand => (
                 <div key={brand.id} className="p-10 bg-white rounded-[3rem] border-2 border-slate-50 shadow-xl hover:-translate-y-2 transition-all group">
                   <div className="w-12 h-2 mb-6 rounded-full group-hover:w-20 transition-all" style={{ backgroundColor: brand.color }}></div>
                   <h3 className="text-2xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">{brand.name}</h3>
-                  <p className="text-slate-500 font-medium mb-8 leading-relaxed italic">"{brand.description}"</p>
-                  <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="text-[#1B345B] font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
+                  <p className="text-slate-500 font-medium mb-8 leading-relaxed italic line-clamp-3">"{brand.description}"</p>
+                  <a href={`${whatsappBrandUrl}&text=Olá! Gostaria de informações sobre a ${brand.name}`} target="_blank" rel="noopener noreferrer" className="text-[#1B345B] font-black text-[10px] uppercase tracking-widest flex items-center gap-2 hover:translate-x-2 transition-transform">
                     Consultar Orçamento <Icon name="ArrowRight" size={14} className="text-[#F7B718]" />
                   </a>
                 </div>
@@ -288,8 +311,8 @@ const App: React.FC = () => {
               <h2 className="text-5xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">Fale com a gente</h2>
               <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Sua produção merece componentes de alta performance.</p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              <div className="bg-[#1B345B] p-10 md:p-14 rounded-[3.5rem] text-white shadow-2xl h-full flex flex-col justify-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
+              <div className="bg-[#1B345B] p-10 md:p-14 rounded-[3.5rem] text-white shadow-2xl flex flex-col justify-center">
                 <h3 className="text-2xl font-black uppercase tracking-tighter mb-10 text-[#F7B718]">Canais Oficiais</h3>
                 <div className="space-y-10">
                   <div className="flex items-center gap-6">
@@ -316,7 +339,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mb-1">E-mail</p>
-                      <p className="text-sm font-bold opacity-80 uppercase">{CONTACT_INFO.email}</p>
+                      <p className="text-sm font-bold opacity-80 uppercase break-all">{CONTACT_INFO.email}</p>
                     </div>
                   </div>
                 </div>
@@ -339,11 +362,13 @@ const App: React.FC = () => {
         </div>
       </a>
 
-      <footer className="bg-white border-t-2 border-[#F7B718] py-16 px-6 flex flex-col md:flex-row items-center justify-between gap-8 max-w-7xl mx-auto w-full">
-        <Logo small />
-        <div className="text-center md:text-right">
-          <p className="text-[10px] font-black text-[#1B345B] uppercase tracking-widest mb-2">© 2026 Infinity Soluções Têxteis Representações Comerciais</p>
-          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Franca - SP | Polo Calçadista</p>
+      <footer className="bg-white border-t-2 border-[#F7B718] py-16 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          <Logo small />
+          <div className="text-center md:text-right">
+            <p className="text-[10px] font-black text-[#1B345B] uppercase tracking-widest mb-2">© 2026 Infinity Soluções Têxteis Representações Comerciais</p>
+            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Franca - SP | Polo Calçadista de Excelência</p>
+          </div>
         </div>
       </footer>
     </div>

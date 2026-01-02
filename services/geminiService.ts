@@ -7,9 +7,18 @@ export interface AISearchResult {
   message: string;
 }
 
+// Função auxiliar para limpar markdown da resposta da IA
+const cleanAIResponse = (text: string) => {
+  return text.replace(/```json/g, '').replace(/```/g, '').trim();
+};
+
 export const searchProductsWithAI = async (query: string, products: Product[]): Promise<AISearchResult> => {
-  // Inicialização local para garantir que pegue o process.env.API_KEY atualizado
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    return { ids: [], message: "Configuração de IA pendente no servidor. Por favor, contate a Cristiane via WhatsApp para suporte técnico." };
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   
   try {
     const productContext = products.map(p => ({
@@ -32,7 +41,7 @@ Instruções Cruciais de Fidelidade:
 3. Espugum: Fabricante Oficial Ortholite no Brasil. Destaque a tecnologia Ortholite Foam (espuma de célula aberta).
 4. Raima: Têxteis com cores Pantone e dublagens especiais.
 5. Pollibox: Adesivos base água ecológicos, filmes TPU e entretelas para cambrê.
-6. Forneça respostas técnicas profissionais e curtas.`,
+6. Forneça respostas técnicas profissionais, curtas e em português.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -46,24 +55,26 @@ Instruções Cruciais de Fidelidade:
       }
     });
 
-    const jsonStr = response.text?.trim() || "{}";
-    return JSON.parse(jsonStr);
+    const text = cleanAIResponse(response.text || "{}");
+    return JSON.parse(text);
   } catch (error) {
     console.error("Erro na busca IA:", error);
-    return { ids: [], message: "Estamos com alta demanda na consultoria digital. Por favor, clique no botão do WhatsApp abaixo para falar agora mesmo com a Cristiane Calzavara." };
+    return { ids: [], message: "No momento estamos operando em modo manual. Clique no botão abaixo para falar diretamente com nossa equipe." };
   }
 };
 
 export const getIndustryNews = async (): Promise<BlogPost[]> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) return [];
+
+  const ai = new GoogleGenAI({ apiKey });
   
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Gere 5 posts de tendências exclusivas para o setor calçadista 2026.
-Foque em: Ortholite Foam, Sustentabilidade Pollibox, Cores Pantone 2026 e Têxteis Raima.
-Retorne um ARRAY de objetos JSON com id, title, excerpt, brand, date, image.
-Use imagens de alta qualidade do Unsplash relacionadas a couro, tecidos, design de calçados e tecnologia.`,
+      contents: `Gere exatamente 5 posts de tendências reais do setor calçadista para 2026.
+Foque em: Tecnologias de palminhas Ortholite, adesivos ecológicos Pollibox e cores Pantone 2026.
+Retorne um ARRAY de objetos JSON com: id, title, excerpt, brand, date, image (links reais do Unsplash).`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
@@ -85,7 +96,7 @@ Use imagens de alta qualidade do Unsplash relacionadas a couro, tecidos, design 
       }
     });
     
-    const text = response.text?.trim() || "[]";
+    const text = cleanAIResponse(response.text || "[]");
     return JSON.parse(text);
   } catch (error) {
     console.error("Erro ao carregar notícias:", error);
