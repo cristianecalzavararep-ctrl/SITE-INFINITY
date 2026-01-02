@@ -111,7 +111,7 @@ const ContactForm: React.FC = () => {
           required
           rows={3}
           className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all resize-none placeholder:text-slate-300 text-sm"
-          placeholder="Descreva o que você precisa..."
+          placeholder="Não encontrou o que procurava? Temos parcerias que podemos indicar"
           value={formData.message}
           onChange={e => setFormData({...formData, message: e.target.value})}
         />
