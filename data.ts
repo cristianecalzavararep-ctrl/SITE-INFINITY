@@ -1,5 +1,5 @@
 
-import { Product, Brand } from './types';
+import { Product, Brand, BlogPost } from './types';
 
 export const BRANDS_DATA: Brand[] = [
   { 
@@ -46,8 +46,34 @@ export const BRANDS_DATA: Brand[] = [
   },
 ];
 
+export const INITIAL_BLOG_POSTS: BlogPost[] = [
+  {
+    id: 'trend-1',
+    title: 'A Ascensão do Conforto High-Tech',
+    excerpt: 'Para 2026, a fusão entre performance esportiva e design casual dominará o mercado calçadista premium.',
+    brand: 'Ortholite / Espugum',
+    date: '2026 Preview',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop'
+  },
+  {
+    id: 'trend-2',
+    title: 'Sustentabilidade sem Solventes',
+    excerpt: 'Colagens termo-reativas e adesivos base água são o novo padrão ouro para fábricas eco-conscientes.',
+    brand: 'Pollibox Ecoadesivos',
+    date: '2026 Preview',
+    image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1200&auto=format&fit=crop'
+  },
+  {
+    id: 'trend-3',
+    title: 'Paletas de Cor Visionárias',
+    excerpt: 'Exploração de tons orgânicos e acabamentos tecnológicos que definem a estética da próxima temporada.',
+    brand: 'Raima Têxtil',
+    date: '2026 Preview',
+    image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1200&auto=format&fit=crop'
+  }
+];
+
 export const PRODUCTS: Product[] = [
-  // DAYUSE
   {
     id: 'day-01',
     name: 'Zip Lock Personalizado',
@@ -68,7 +94,6 @@ export const PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1589793463357-5fb813435467?q=80&w=800&auto=format&fit=crop',
     tags: ['e-commerce', 'envios', 'segurança']
   },
-  // POLLIBOX
   {
     id: 'pol-01',
     name: 'Filme Adesivo Termo-Reativo',
@@ -79,7 +104,6 @@ export const PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=800&auto=format&fit=crop',
     tags: ['colagem', 'tecnologia', 'sustentável']
   },
-  // SJB
   {
     id: 'sjb-01',
     name: 'Solado Feminino Casual PU',
@@ -90,7 +114,6 @@ export const PRODUCTS: Product[] = [
     image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800&auto=format&fit=crop',
     tags: ['solados', 'feminino', 'conforto']
   },
-  // ORTHOLITE
   {
     id: 'ortho-01',
     name: 'Palmilha Ortholite Hybrid',

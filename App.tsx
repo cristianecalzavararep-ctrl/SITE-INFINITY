@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Product, ViewState, BlogPost } from './types';
-import { PRODUCTS, BRANDS_DATA } from './data';
+import { PRODUCTS, BRANDS_DATA, INITIAL_BLOG_POSTS } from './data';
 import Icon from './components/Icon';
 import { searchProductsWithAI, getIndustryNews, AISearchResult } from './services/geminiService';
 
@@ -188,7 +188,7 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<AISearchResult | null>(null);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
 
   const whatsappBrandUrl = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
 
@@ -198,7 +198,9 @@ const App: React.FC = () => {
 
   const loadNews = async () => {
     const news = await getIndustryNews();
-    setBlogPosts(news);
+    if (news && news.length > 0) {
+      setBlogPosts(news);
+    }
   };
 
   const handleAISearch = async (e?: React.FormEvent) => {
