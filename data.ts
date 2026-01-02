@@ -48,12 +48,12 @@ export const BRANDS_DATA: Brand[] = [
 
 export const INITIAL_BLOG_POSTS: BlogPost[] = [
   {
-    id: 'trend-1',
-    title: 'A Ascensão do Conforto High-Tech',
-    excerpt: 'Para 2026, a fusão entre performance esportiva e design casual dominará o mercado calçadista premium.',
-    brand: 'Ortholite / Espugum',
-    date: '2026 Preview',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop'
+    id: 'trend-ortholite-foam',
+    title: 'Ortholite Foam: O Futuro do Amortecimento',
+    excerpt: 'A tecnologia Ortholite Foam redefine o conforto para 2026, com espumas de célula aberta que garantem respirabilidade e resiliência incomparáveis.',
+    brand: 'Espugum - Ortholite Brasil',
+    date: 'Lançamento 2026',
+    image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1200&auto=format&fit=crop'
   },
   {
     id: 'trend-2',

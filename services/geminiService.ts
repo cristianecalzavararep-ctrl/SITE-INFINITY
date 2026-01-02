@@ -29,7 +29,7 @@ Seu catálogo disponível: ${JSON.stringify(productContext)}.
 Instruções Cruciais de Fidelidade:
 1. Dayuse: Foco em Zip Lock (liso/personalizado), Envelopes para E-commerce e Autoadesivos Transparentes.
 2. SJB: SEMPRE use a descrição: "SOLADOS FEMININOS EM PU, MICRO, TR".
-3. Espugum: Fabricante Oficial Ortholite no Brasil.
+3. Espugum: Fabricante Oficial Ortholite no Brasil. Destaque a tecnologia Ortholite Foam (espuma de célula aberta).
 4. Raima: Têxteis com cores Pantone e dublagens especiais.
 5. Pollibox: Adesivos base água ecológicos, filmes TPU e entretelas para cambrê.
 6. Forneça respostas técnicas baseadas apenas nestas informações.`,
@@ -59,15 +59,16 @@ export const getIndustryNews = async (): Promise<BlogPost[]> => {
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: `Gere 6 posts informativos de ALTO NÍVEL focados EXCLUSIVAMENTE em TENDÊNCIAS 2026 para a área calçadista, baseados em fontes de autoridade:
+- Ortholite Foam (@ortholite) -> Novas espumas sustentáveis, respirabilidade extrema e resiliência para 2026.
 - Pantone (@pantone) -> Antecipação da Cor do Ano 2026 e paletas para o setor de calçados e acessórios.
 - Abicalçados (@abicalcadosoficial) -> Projeções de tendências globais e feiras internacionais para 2026.
 - Adidas, Klin, Pampilli e Carmen Steffens.
 
 REGRAS:
-1. USE GOOGLE SEARCH para encontrar lançamentos conceituais para 2026, novas tecnologias de materiais e anúncios de tendências futuras no setor calçadista.
+1. USE GOOGLE SEARCH para encontrar lançamentos conceituais para 2026, com foco especial na tecnologia de espumas Ortholite Foam e Espugum Brasil.
 2. O conteúdo deve ser totalmente focado em inovações e estilos para o ano de 2026.
 3. NÃO inclua informações sobre Arezzo, Ferracini ou Mazuque.
-4. Títulos devem evocar exclusividade e visão de futuro (ex: "O Futuro dos Componentes: Visão 2026").
+4. Títulos devem evocar exclusividade e visão de futuro (ex: "Ortholite Foam: A Revolução do Amortecimento 2026").
 5. Use imagens do Unsplash que representem design futurista, materiais tecnológicos e luxo.
 6. Retorne obrigatoriamente um ARRAY de objetos JSON.`,
       config: {
