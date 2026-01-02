@@ -139,14 +139,8 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
     return () => clearInterval(timer);
   }, [posts.length]);
 
-  if (posts.length === 0) return (
-    <div className="w-full h-[350px] bg-[#1B345B] flex items-center justify-center relative overflow-hidden">
-      <div className="flex flex-col items-center gap-6 relative z-10">
-        <div className="w-12 h-12 border-4 border-white/10 border-t-[#F7B718] rounded-full animate-spin"></div>
-        <p className="text-white font-black text-[10px] uppercase tracking-[0.4em]">Sincronizando Visão 2026...</p>
-      </div>
-    </div>
-  );
+  // Garantimos que nunca mostre o loader se houver posts iniciais (fallback)
+  if (posts.length === 0) return null;
 
   return (
     <div className="relative w-full h-[450px] sm:h-[500px] md:h-[600px] overflow-hidden bg-black">
@@ -215,7 +209,15 @@ const App: React.FC = () => {
   const Logo = ({ light = false, small = false }: { light?: boolean; small?: boolean }) => (
     <div className="flex items-center gap-3 md:gap-4 cursor-pointer group" onClick={() => { setCurrentView('catalog'); setAiResult(null); window.scrollTo(0,0); }}>
       <div className="relative">
-        <Icon name="Infinity" className={`text-[#F7B718] animate-spin-slow relative z-10`} size={light ? 36 : (small ? 40 : 52)} />
+        {/* Usando SVG que imita o novo logo Infinity 3D enviado */}
+        <svg 
+          viewBox="0 0 24 24" 
+          className={`animate-spin-slow relative z-10 transition-all group-hover:scale-110`}
+          style={{ width: light ? 36 : (small ? 40 : 52), height: light ? 36 : (small ? 40 : 52) }}
+        >
+          <path fill="#1B345B" d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.5l-2.83 2.83l-2.83-2.83c-.97-.94-2.33-1.5-3.77-1.5c-2.98 0-5.4 2.42-5.4 5.4s2.42 5.4 5.4 5.4c1.44 0 2.8-.56 3.77-1.5l2.83-2.83l2.83 2.83c.97.94 2.33 1.5 3.77 1.5c2.98 0 5.4-2.42 5.4-5.4s-2.42-5.4-5.4-5.4zm-13.2 8.4c-1.65 0-3-1.35-3-3s1.35-3 3-3c.83 0 1.58.34 2.12.88l2.88 2.88l-2.88 2.88c-.54.54-1.29.88-2.12.88zm13.2 0c-.83 0-1.58-.34-2.12-.88l-2.88-2.88l2.88-2.88c.54-.54 1.29-.88 2.12-.88c1.65 0 3 1.35 3 3s-1.35 3-3 3z"/>
+          <path fill="#F7B718" d="M18.6 6.62c-1.44 0-2.8.56-3.77 1.5l-2.83 2.83l2.83 2.83c.97.94 2.33 1.5 3.77 1.5c2.98 0 5.4-2.42 5.4-5.4s-2.42-5.4-5.4-5.4zm3 5.4c0 1.65-1.35 3-3 3c-.83 0-1.58-.34-2.12-.88l-2.88-2.88l2.88-2.88c.54-.54 1.29-.88 2.12-.88c1.65 0 3 1.35 3 3z"/>
+        </svg>
         <div className="absolute inset-0 bg-[#F7B718]/20 blur-lg rounded-full group-hover:bg-[#F7B718]/40 transition-all"></div>
       </div>
       <div className="flex flex-col leading-tight">
