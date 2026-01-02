@@ -108,12 +108,14 @@ const ContactForm: React.FC = () => {
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">Não encontrou o que estava procurando?</label>
+        <label className="text-[10px] font-black uppercase tracking-[0.15em] text-[#1B345B] ml-4 leading-tight block">
+          Não encontrou o que estava procurando? <span className="text-slate-400 block text-[9px] mt-0.5">Temos parcerias valiosas neste segmento que podemos indicar.</span>
+        </label>
         <textarea 
           required
           rows={3}
           className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all resize-none placeholder:text-slate-300 text-sm"
-          placeholder="Temos parcerias valiosas neste segmento que podemos indicar."
+          placeholder="Descreva o que você precisa..."
           value={formData.message}
           onChange={e => setFormData({...formData, message: e.target.value})}
         />
@@ -217,7 +219,7 @@ const App: React.FC = () => {
       <div className="flex flex-col leading-tight">
         <span className={`${small ? 'text-lg' : 'text-2xl md:text-4xl'} font-black tracking-tighter uppercase ${light ? 'text-white' : 'text-[#1B345B]'}`}>INFINITY</span>
         <div className="flex flex-col -mt-0.5">
-          <span className="text-[7px] md:text-[10px] font-black text-[#EAB308] tracking-[0.2em] uppercase">SOLUÇÕES TÊXTEIS</span>
+          <span className="text-[6px] md:text-[9px] font-black text-[#EAB308] tracking-[0.1em] uppercase">SOLUÇÕES TÊXTEIS REPRESENTAÇÕES COMERCIAIS</span>
         </div>
       </div>
     </div>
@@ -427,7 +429,7 @@ const App: React.FC = () => {
         </div>
         <div className="max-w-7xl mx-auto pt-8 mt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
           <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-slate-400">
-            INFINITY SOLUÇÕES TÊXTEIS © 2026 | FRANCA-SP
+            INFINITY SOLUÇÕES TÊXTEIS REPRESENTAÇÕES COMERCIAIS © 2026 | FRANCA-SP
           </p>
           <div className="flex gap-8">
              <button onClick={() => { setCurrentView('catalog'); window.scrollTo(0,0); }} className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-[#1B345B]">Catálogo</button>

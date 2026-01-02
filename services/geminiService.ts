@@ -3,7 +3,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Product, BlogPost } from "../types";
 
 // Initializing the Google GenAI SDK with the API Key from environment variables.
-// The API key is obtained exclusively from process.env.API_KEY.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export interface AISearchResult {
@@ -21,7 +20,6 @@ export const searchProductsWithAI = async (query: string, products: Product[]): 
       category: p.category
     }));
 
-    // Using gemini-3-flash-preview for basic technical consultancy/search task.
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Você é o Consultor Técnico da Infinity Soluções Têxteis Representações Comerciais.
@@ -48,7 +46,6 @@ Instruções Cruciais de Fidelidade:
       }
     });
 
-    // Accessing .text property directly as it is a getter.
     const jsonStr = response.text?.trim() || "{}";
     return JSON.parse(jsonStr);
   } catch (error) {
@@ -59,7 +56,6 @@ Instruções Cruciais de Fidelidade:
 
 export const getIndustryNews = async (): Promise<BlogPost[]> => {
   try {
-    // Using gemini-3-pro-preview for complex reasoning and search-based content generation.
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: `Gere 6 posts informativos de ALTO NÍVEL focados EXCLUSIVAMENTE em TENDÊNCIAS 2026 para a área calçadista, baseados em fontes de autoridade:
@@ -95,11 +91,9 @@ REGRAS:
       }
     });
     
-    // Extracting text output using the .text property.
     const text = response.text?.trim() || "[]";
     const posts: BlogPost[] = JSON.parse(text);
 
-    // Extracting URLs from groundingChunks when using googleSearch tool.
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     if (chunks && Array.isArray(chunks)) {
       posts.forEach((post, index) => {
