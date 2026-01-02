@@ -150,10 +150,10 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    if (posts.length === 0) return;
+    if (posts.length <= 1) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % posts.length);
-    }, 7000);
+    }, 5000);
     return () => clearInterval(timer);
   }, [posts.length]);
 
@@ -162,7 +162,8 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
       {posts.map((post, index) => (
         <div 
           key={post.id}
-          className={`absolute inset-0 transition-all duration-1000 flex items-center ${index === current ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+          className={`absolute inset-0 transition-all duration-1000 flex items-center ${index === current ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}
+          style={{ transitionDelay: index === current ? '0ms' : '0ms' }}
         >
           <img src={post.image} className="absolute inset-0 w-full h-full object-cover opacity-50" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1B345B] via-[#1B345B]/40 to-transparent" />
@@ -173,9 +174,13 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
           </div>
         </div>
       ))}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {posts.map((_, i) => (
-          <div key={i} className={`h-1 rounded-full transition-all ${i === current ? 'w-10 bg-[#F7B718]' : 'w-2 bg-white/20'}`} />
+          <button 
+            key={i} 
+            onClick={() => setCurrent(i)}
+            className={`h-1.5 rounded-full transition-all ${i === current ? 'w-12 bg-[#F7B718]' : 'w-3 bg-white/30 hover:bg-white/50'}`} 
+          />
         ))}
       </div>
     </div>
@@ -184,16 +189,18 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('catalog');
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
+  // Usando apenas posts estáticos confiáveis por enquanto para o banner principal
+  const [blogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [aiResult, setAiResult] = useState<AISearchResult | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
 
   const whatsappBrandUrl = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
 
-  useEffect(() => {
-    getIndustryNews().then(news => news.length && setBlogPosts(news));
-  }, []);
+  // Desativado o fetch automático de notícias para o banner hero para evitar informações não solicitadas
+  // useEffect(() => {
+  //   getIndustryNews().then(news => news.length && setBlogPosts(news));
+  // }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -312,7 +319,7 @@ const App: React.FC = () => {
         </section>
       </main>
 
-      {/* WhatsApp FAB Flutuante - Agora com a mensagem de boas-vindas correta */}
+      {/* WhatsApp FAB Flutuante */}
       <a 
         href={whatsappBrandUrl}
         target="_blank" 

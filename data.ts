@@ -48,27 +48,27 @@ export const BRANDS_DATA: Brand[] = [
 
 export const INITIAL_BLOG_POSTS: BlogPost[] = [
   {
-    id: 'trend-ortholite-foam',
-    title: 'Ortholite Foam: O Futuro do Amortecimento',
-    excerpt: 'A tecnologia Ortholite Foam redefine o conforto para 2026, com espumas de célula aberta que garantem respirabilidade e resiliência incomparáveis.',
-    brand: 'Espugum - Ortholite Brasil',
-    date: 'Lançamento 2026',
-    image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1200&auto=format&fit=crop'
+    id: 'trend-1-infinity',
+    title: 'Infinity: Excelência em Representação',
+    excerpt: 'Conectamos as melhores indústrias de componentes ao polo calçadista, garantindo inovação e tecnologia para sua produção 2026.',
+    brand: 'Infinity Soluções Têxteis',
+    date: 'Destaque 2026',
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200&auto=format&fit=crop'
   },
   {
-    id: 'trend-2',
-    title: 'Sustentabilidade sem Solventes',
-    excerpt: 'Colagens termo-reativas e adesivos base água são o novo padrão ouro para fábricas eco-conscientes.',
+    id: 'trend-2-pollibox',
+    title: 'Sustentabilidade com Pollibox',
+    excerpt: 'Colagens termo-reativas e filmes TPU de alta performance. O futuro da indústria calçadista é sem solventes.',
     brand: 'Pollibox Ecoadesivos',
-    date: '2026 Preview',
+    date: 'Tecnologia Limpa',
     image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1200&auto=format&fit=crop'
   },
   {
-    id: 'trend-3',
-    title: 'Paletas de Cor Visionárias',
-    excerpt: 'Exploração de tons orgânicos e acabamentos tecnológicos que definem a estética da próxima temporada.',
+    id: 'trend-3-raima',
+    title: 'Cores e Texturas Técnicas',
+    excerpt: 'Tecidos técnicos e dublagens especiais com a precisão que sua coleção exige. Tendências de cores para o verão 2026.',
     brand: 'Raima Têxtil',
-    date: '2026 Preview',
+    date: 'Tendência Têxtil',
     image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1200&auto=format&fit=crop'
   }
 ];
