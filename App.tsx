@@ -108,12 +108,12 @@ const ContactForm: React.FC = () => {
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">Como podemos ajudar?</label>
+        <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">Não encontrou o que estava procurando?</label>
         <textarea 
           required
           rows={3}
           className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:border-[#F7B718] rounded-xl outline-none font-bold text-[#1B345B] transition-all resize-none placeholder:text-slate-300 text-sm"
-          placeholder="Descreva sua dúvida técnica ou solicitação..."
+          placeholder="Temos parcerias valiosas neste segmento que podemos indicar."
           value={formData.message}
           onChange={e => setFormData({...formData, message: e.target.value})}
         />
@@ -391,11 +391,6 @@ const App: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-16 pt-10 border-t border-white/10">
-                       <p className="text-xs font-medium text-white/60 italic leading-relaxed">
-                         "Nosso compromisso é conectar as melhores fábricas calçadistas do Brasil às tecnologias têxteis mais avançadas do mundo."
-                       </p>
-                    </div>
                   </div>
                 </div>
                 <div className="pt-2">
@@ -406,7 +401,7 @@ const App: React.FC = () => {
         )}
       </main>
 
-      {/* WhatsApp FAB com efeito de pulso */}
+      {/* WhatsApp FAB */}
       <a 
         href={whatsappBrandUrl}
         target="_blank" 
@@ -421,36 +416,22 @@ const App: React.FC = () => {
         </div>
       </a>
 
-      <footer className="bg-[#0A0F1A] text-white pt-20 pb-12 px-6 md:px-12 relative mt-auto border-t-8 border-[#F7B718]">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-16">
-          <div>
-            <Logo light />
-            <p className="mt-8 text-slate-400 text-sm md:text-base font-medium leading-relaxed italic opacity-80 max-w-md">
-              Especialista em componentes calçadistas, tecidos técnicos e inovação industrial. Representação exclusiva para Franca e região.
-            </p>
-          </div>
-          
-          <div className="flex flex-col lg:items-end justify-center space-y-6">
-             <div className="text-left lg:text-right">
-               <p className="text-2xl md:text-3xl font-black tracking-tighter text-white uppercase mb-2">Cristiane Calzavara</p>
-               <p className="text-xl md:text-2xl font-black text-[#F7B718] tracking-widest">{CONTACT_INFO.phone}</p>
-               <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.4em] mt-3">FRANCA - SÃO PAULO - BRASIL</p>
-             </div>
-             <div className="flex gap-6 mt-4">
-                <Icon name="Linkedin" className="text-slate-600 hover:text-[#F7B718] transition-colors cursor-pointer" size={24} />
-                <Icon name="Instagram" className="text-slate-600 hover:text-[#F7B718] transition-colors cursor-pointer" size={24} />
-             </div>
+      {/* Footer simplificado e limpo */}
+      <footer className="bg-white border-t-2 border-[#F7B718] py-12 px-6 md:px-12 mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <Logo small />
+          <div className="flex flex-col items-center md:items-end">
+            <p className="text-[10px] font-black text-[#1B345B] uppercase tracking-[0.4em] mb-2">Cristiane Calzavara</p>
+            <p className="text-sm font-black text-[#F7B718] tracking-widest">{CONTACT_INFO.phone}</p>
           </div>
         </div>
-        
-        <div className="max-w-7xl mx-auto pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-slate-700">
-            INFINITY SOLUÇÕES TÊXTEIS © 2026 | TODOS OS DIREITOS RESERVADOS
+        <div className="max-w-7xl mx-auto pt-8 mt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
+          <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-slate-400">
+            INFINITY SOLUÇÕES TÊXTEIS © 2026 | FRANCA-SP
           </p>
-          <div className="flex gap-12">
-             <button onClick={() => { setCurrentView('catalog'); window.scrollTo(0,0); }} className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600 hover:text-white transition-all">Catálogo</button>
-             <button onClick={() => { setCurrentView('contact'); window.scrollTo(0,0); }} className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600 hover:text-white transition-all">Privacidade</button>
-             <button onClick={() => { setCurrentView('contact'); window.scrollTo(0,0); }} className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600 hover:text-white transition-all">Contato</button>
+          <div className="flex gap-8">
+             <button onClick={() => { setCurrentView('catalog'); window.scrollTo(0,0); }} className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-[#1B345B]">Catálogo</button>
+             <button onClick={() => { setCurrentView('contact'); window.scrollTo(0,0); }} className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-[#1B345B]">Atendimento</button>
           </div>
         </div>
       </footer>
