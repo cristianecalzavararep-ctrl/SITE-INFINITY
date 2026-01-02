@@ -1,5 +1,6 @@
+
 User-agent: *
 Allow: /
 
 # Sitemap ajudará o Google a encontrar todas as páginas
-Sitemap: https://infinityrepresentacoes.com.br/sitemap.xml
+Sitemap: https://infinitysolucoestexteis.com.br/sitemap.xml
