@@ -408,7 +408,7 @@ const App: React.FC = () => {
           <div>
             <Logo light small />
             <p className="mt-4 text-slate-500 text-xs md:text-sm font-medium leading-relaxed italic opacity-70 max-w-sm">
-              Inovação têxtil e soluções adesivas sustentáveis. Representação oficial em Franca-SP.
+              REPRESENTAÇÃO COMERCIAL FRANCA -SP.
             </p>
             <div className="mt-6 flex gap-4">
               <a href="#" className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center hover:bg-[#F7B718] transition-colors group">
