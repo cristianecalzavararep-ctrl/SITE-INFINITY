@@ -138,7 +138,10 @@ const Logo = ({ small = false }: { small?: boolean }) => (
     </div>
     <div className="flex flex-col leading-none text-left">
       <span className="text-2xl font-black text-[#1B345B] tracking-tighter uppercase">INFINITY</span>
-      <span className="text-[8px] font-black text-[#F7B718] tracking-[0.1em] uppercase">SOLUÇÕES TÊXTEIS</span>
+      <div className="flex flex-col">
+        <span className="text-[8px] font-black text-[#F7B718] tracking-[0.1em] uppercase">SOLUÇÕES TÊXTEIS</span>
+        <span className="text-[6px] font-black text-[#1B345B] opacity-70 tracking-[0.05em] uppercase">REPRESENTAÇÕES COMERCIAIS</span>
+      </div>
     </div>
   </div>
 );
@@ -325,7 +328,7 @@ const App: React.FC = () => {
       <footer className="bg-white border-t-2 border-[#F7B718] py-16 px-6 flex flex-col md:flex-row items-center justify-between gap-8 max-w-7xl mx-auto w-full">
         <Logo small />
         <div className="text-center md:text-right">
-          <p className="text-[10px] font-black text-[#1B345B] uppercase tracking-widest mb-2">© 2026 Infinity Soluções Têxteis - Representações Comerciais</p>
+          <p className="text-[10px] font-black text-[#1B345B] uppercase tracking-widest mb-2">© 2026 Infinity Soluções Têxteis Representações Comerciais</p>
           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Franca - SP | Polo Calçadista</p>
         </div>
       </footer>
