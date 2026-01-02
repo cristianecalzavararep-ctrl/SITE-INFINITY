@@ -57,17 +57,18 @@ export const getIndustryNews = async (): Promise<BlogPost[]> => {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Gere 6 posts informativos de ALTO NÍVEL focados em TENDÊNCIAS 2025/2026 e notícias atuais baseadas nos perfis oficiais:
-- Pantone (@pantone) -> Antecipação da Cor do Ano 2026 e paletas para o verão 25/26.
-- Abicalçados (@abicalcadosoficial) -> Projeções de exportação e feiras internacionais 2026.
-- Arezzo, Adidas, Ferracini, Klin, Pampilli, Carmen Steffens e Mazuque.
+      contents: `Gere 6 posts informativos de ALTO NÍVEL focados EXCLUSIVAMENTE em TENDÊNCIAS 2026 para a área calçadista, baseados em fontes de autoridade:
+- Pantone (@pantone) -> Antecipação da Cor do Ano 2026 e paletas para o setor de calçados e acessórios.
+- Abicalçados (@abicalcadosoficial) -> Projeções de tendências globais e feiras internacionais para 2026.
+- Adidas, Klin, Pampilli e Carmen Steffens.
 
 REGRAS:
-1. USE GOOGLE SEARCH para encontrar posts reais, lançamentos de coleções 2026 e anúncios de tendências recentes.
-2. O conteúdo deve ser "Forward-looking" (olhando para o futuro da indústria).
-3. Títulos devem evocar exclusividade e elitismo (ex: "O Futuro Cromático: Projeções Pantone 2026").
-4. Use imagens do Unsplash que representem design futurista, luxo e tecnologia de ponta.
-5. Retorne obrigatoriamente um ARRAY de objetos JSON.`,
+1. USE GOOGLE SEARCH para encontrar lançamentos conceituais para 2026, novas tecnologias de materiais e anúncios de tendências futuras no setor calçadista.
+2. O conteúdo deve ser totalmente focado em inovações e estilos para o ano de 2026.
+3. NÃO inclua informações sobre Arezzo, Ferracini ou Mazuque.
+4. Títulos devem evocar exclusividade e visão de futuro (ex: "O Futuro dos Componentes: Visão 2026").
+5. Use imagens do Unsplash que representem design futurista, materiais tecnológicos e luxo.
+6. Retorne obrigatoriamente um ARRAY de objetos JSON.`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",

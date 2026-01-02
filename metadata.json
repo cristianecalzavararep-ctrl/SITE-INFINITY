@@ -1,5 +1,17 @@
 {
-  "name": "INFINITY SOLUÇÕES TÊXTEIS REPRESENTAÇÕES COMERCIAIS",
-  "description": "Consultoria e representação industrial especializada no setor calçadista. Pollibox, Espugum, Totalmaq e grandes marcas.",
+  "name": "SITE INFINITY SOLUÇÕES TÊXTEIS ",
+  "short_name": "Infinity",
+  "description": "Representação Industrial em Franca-SP. Pollibox, Espugum, Raima Cordex, DayUse e SJB.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1B345B",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=192&auto=format&fit=crop",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
   "requestFramePermissions": []
 }
