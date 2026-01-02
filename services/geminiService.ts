@@ -2,15 +2,15 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Product, BlogPost } from "../types";
 
-// Initializing the Google GenAI SDK with the API Key from environment variables.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export interface AISearchResult {
   ids: string[];
   message: string;
 }
 
 export const searchProductsWithAI = async (query: string, products: Product[]): Promise<AISearchResult> => {
+  // Inicialização local para garantir que pegue o process.env.API_KEY atualizado
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const productContext = products.map(p => ({
       id: p.id,
@@ -32,7 +32,7 @@ Instruções Cruciais de Fidelidade:
 3. Espugum: Fabricante Oficial Ortholite no Brasil. Destaque a tecnologia Ortholite Foam (espuma de célula aberta).
 4. Raima: Têxteis com cores Pantone e dublagens especiais.
 5. Pollibox: Adesivos base água ecológicos, filmes TPU e entretelas para cambrê.
-6. Forneça respostas técnicas baseadas apenas nestas informações.`,
+6. Forneça respostas técnicas profissionais e curtas.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -50,27 +50,20 @@ Instruções Cruciais de Fidelidade:
     return JSON.parse(jsonStr);
   } catch (error) {
     console.error("Erro na busca IA:", error);
-    return { ids: [], message: "No momento não consegui processar sua dúvida técnica. Por favor, utilize o botão do WhatsApp para falar diretamente com a Cristiane." };
+    return { ids: [], message: "Estamos com alta demanda na consultoria digital. Por favor, clique no botão do WhatsApp abaixo para falar agora mesmo com a Cristiane Calzavara." };
   }
 };
 
 export const getIndustryNews = async (): Promise<BlogPost[]> => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
-      contents: `Gere 6 posts informativos de ALTO NÍVEL focados EXCLUSIVAMENTE em TENDÊNCIAS 2026 para a área calçadista, baseados em fontes de autoridade:
-- Ortholite Foam (@ortholite) -> Novas espumas sustentáveis, respirabilidade extrema e resiliência para 2026.
-- Pantone (@pantone) -> Antecipação da Cor do Ano 2026 e paletas para o setor de calçados e acessórios.
-- Abicalçados (@abicalcadosoficial) -> Projeções de tendências globais e feiras internacionais para 2026.
-- Adidas, Klin, Pampilli e Carmen Steffens.
-
-REGRAS:
-1. USE GOOGLE SEARCH para encontrar lançamentos conceituais para 2026, com foco especial na tecnologia de espumas Ortholite Foam e Espugum Brasil.
-2. O conteúdo deve ser totalmente focado em inovações e estilos para o ano de 2026.
-3. NÃO inclua informações sobre Arezzo, Ferracini ou Mazuque.
-4. Títulos devem evocar exclusividade e visão de futuro (ex: "Ortholite Foam: A Revolução do Amortecimento 2026").
-5. Use imagens do Unsplash que representem design futurista, materiais tecnológicos e luxo.
-6. Retorne obrigatoriamente um ARRAY de objetos JSON.`,
+      model: "gemini-3-flash-preview",
+      contents: `Gere 5 posts de tendências exclusivas para o setor calçadista 2026.
+Foque em: Ortholite Foam, Sustentabilidade Pollibox, Cores Pantone 2026 e Têxteis Raima.
+Retorne um ARRAY de objetos JSON com id, title, excerpt, brand, date, image.
+Use imagens de alta qualidade do Unsplash relacionadas a couro, tecidos, design de calçados e tecnologia.`,
       config: {
         tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
@@ -93,21 +86,9 @@ REGRAS:
     });
     
     const text = response.text?.trim() || "[]";
-    const posts: BlogPost[] = JSON.parse(text);
-
-    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-    if (chunks && Array.isArray(chunks)) {
-      posts.forEach((post, index) => {
-        const chunk = chunks[index % chunks.length];
-        if (chunk?.web?.uri) {
-          post.sourceUrl = chunk.web.uri;
-        }
-      });
-    }
-
-    return posts;
+    return JSON.parse(text);
   } catch (error) {
-    console.error("Erro ao carregar notícias 2026:", error);
+    console.error("Erro ao carregar notícias:", error);
     return [];
   }
 };

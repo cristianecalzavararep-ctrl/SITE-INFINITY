@@ -153,33 +153,34 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
     if (posts.length <= 1) return;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % posts.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, [posts.length]);
+
+  if (!posts || posts.length === 0) return <div className="h-[500px] bg-[#1B345B] animate-pulse" />;
 
   return (
     <div className="relative w-full h-[500px] md:h-[650px] overflow-hidden bg-[#1B345B]">
       {posts.map((post, index) => (
         <div 
-          key={post.id}
-          className={`absolute inset-0 transition-all duration-1000 flex items-center ${index === current ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}
-          style={{ transitionDelay: index === current ? '0ms' : '0ms' }}
+          key={post.id + index}
+          className={`absolute inset-0 transition-all duration-1000 flex items-center ${index === current ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'}`}
         >
-          <img src={post.image} className="absolute inset-0 w-full h-full object-cover opacity-50" alt="" />
+          <img src={post.image} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1B345B] via-[#1B345B]/40 to-transparent" />
           <div className="relative z-10 container mx-auto px-6 md:px-20 text-center md:text-left">
-            <span className="bg-[#F7B718] text-[#1B345B] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 inline-block">Tendência 2026</span>
-            <h2 className="text-white text-4xl md:text-7xl font-black mb-6 uppercase tracking-tighter leading-none max-w-4xl">{post.title}</h2>
-            <p className="text-white/80 text-lg italic max-w-xl border-l-4 border-[#F7B718] pl-6 mx-auto md:mx-0">{post.excerpt}</p>
+            <span className="bg-[#F7B718] text-[#1B345B] text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 inline-block">Tendência Global 2026</span>
+            <h2 className="text-white text-4xl md:text-7xl font-black mb-6 uppercase tracking-tighter leading-none max-w-4xl drop-shadow-2xl">{post.title}</h2>
+            <p className="text-white/90 text-lg italic max-w-xl border-l-4 border-[#F7B718] pl-6 mx-auto md:mx-0 font-medium">{post.excerpt}</p>
           </div>
         </div>
       ))}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-30">
         {posts.map((_, i) => (
           <button 
             key={i} 
             onClick={() => setCurrent(i)}
-            className={`h-1.5 rounded-full transition-all ${i === current ? 'w-12 bg-[#F7B718]' : 'w-3 bg-white/30 hover:bg-white/50'}`} 
+            className={`h-2 rounded-full transition-all ${i === current ? 'w-14 bg-[#F7B718]' : 'w-4 bg-white/40 hover:bg-white/70'}`} 
           />
         ))}
       </div>
@@ -189,26 +190,34 @@ const RotatingBanner: React.FC<{ posts: BlogPost[] }> = ({ posts }) => {
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('catalog');
-  // Usando apenas posts estáticos confiáveis por enquanto para o banner principal
-  const [blogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(INITIAL_BLOG_POSTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [aiResult, setAiResult] = useState<AISearchResult | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
 
   const whatsappBrandUrl = `${CONTACT_INFO.whatsappUrl}?text=${encodeURIComponent(CONTACT_INFO.whatsappWelcomeMsg)}`;
 
-  // Desativado o fetch automático de notícias para o banner hero para evitar informações não solicitadas
-  // useEffect(() => {
-  //   getIndustryNews().then(news => news.length && setBlogPosts(news));
-  // }, []);
+  useEffect(() => {
+    // Busca notícias dinâmicas assim que carregar para dar vida ao site
+    getIndustryNews().then(news => {
+      if (news && news.length > 0) {
+        setBlogPosts(news);
+      }
+    });
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     setAiLoading(true);
-    const result = await searchProductsWithAI(searchQuery, PRODUCTS);
-    setAiResult(result);
-    setAiLoading(false);
+    try {
+      const result = await searchProductsWithAI(searchQuery, PRODUCTS);
+      setAiResult(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   return (
@@ -238,8 +247,8 @@ const App: React.FC = () => {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
             />
-            <button className="absolute right-4 top-4 bg-[#1B345B] text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all">
-              {aiLoading ? 'Consultando...' : 'CONSULTAR'}
+            <button className="absolute right-4 top-4 bg-[#1B345B] text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-black transition-all min-w-[140px]">
+              {aiLoading ? 'CONSULTANDO...' : 'CONSULTAR'}
             </button>
           </form>
 
@@ -247,7 +256,7 @@ const App: React.FC = () => {
             <div className="mb-20 p-8 bg-white rounded-[3rem] border-2 border-[#F7B718] text-left max-w-3xl mx-auto shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
               <p className="text-[#1B345B] font-bold text-lg leading-relaxed italic">"{aiResult.message}"</p>
               <div className="mt-8">
-                <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all inline-block">Falar com Cristiane</a>
+                <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all inline-block">Falar com Cristiane agora</a>
               </div>
             </div>
           )}
@@ -261,7 +270,7 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left">
               {BRANDS_DATA.map(brand => (
                 <div key={brand.id} className="p-10 bg-white rounded-[3rem] border-2 border-slate-50 shadow-xl hover:-translate-y-2 transition-all group">
-                  <div className="w-12 h-2 bg-[#F7B718] mb-6 rounded-full group-hover:w-20 transition-all" style={{ backgroundColor: brand.color }}></div>
+                  <div className="w-12 h-2 mb-6 rounded-full group-hover:w-20 transition-all" style={{ backgroundColor: brand.color }}></div>
                   <h3 className="text-2xl font-black text-[#1B345B] uppercase tracking-tighter mb-4">{brand.name}</h3>
                   <p className="text-slate-500 font-medium mb-8 leading-relaxed italic">"{brand.description}"</p>
                   <a href={whatsappBrandUrl} target="_blank" rel="noopener noreferrer" className="text-[#1B345B] font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
@@ -273,7 +282,6 @@ const App: React.FC = () => {
           </div>
         </section>
 
-        {/* Seção de Contato na Home */}
         <section id="contato" className="py-24 bg-slate-50 border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
@@ -308,7 +316,7 @@ const App: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mb-1">E-mail</p>
-                      <p className="text-sm font-bold opacity-80">{CONTACT_INFO.email}</p>
+                      <p className="text-sm font-bold opacity-80 uppercase">{CONTACT_INFO.email}</p>
                     </div>
                   </div>
                 </div>
@@ -319,7 +327,6 @@ const App: React.FC = () => {
         </section>
       </main>
 
-      {/* WhatsApp FAB Flutuante */}
       <a 
         href={whatsappBrandUrl}
         target="_blank" 
